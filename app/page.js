@@ -6,10 +6,10 @@ export default function Uploadlink() {
       <div className="max-w-4xl w-full px-4 py-16 text-center space-y-8">
         {/* Hero Section */}
         <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          Uploadlink AI
+          Uploadlink
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-          Effortlessly upload your documents and unlock concise, AI-powered insights instantly.
+          Effortlessly upload your documents and unlock concise, and share instantly.
         </p>
 
         {/* CTA Button */}
@@ -51,8 +51,8 @@ export default function Uploadlink() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">AI Intelligence</h3>
-            <p className="text-gray-400">Powerful AI delivers precise and actionable insights.</p>
+            <h3 className="text-xl font-semibold mb-2">Share Seamlessly</h3>
+            <p className="text-gray-400">Simple straightforward app, Upload and Share.</p>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ export default function Uploadlink() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-6 rounded-xl bg-gray-800/30 backdrop-blur-sm border border-gray-700 hover:border-indigo-500/30 transition-all duration-300">
-              <p className="text-gray-300">"Uploadlink has drastically improved my workflow. The AI-powered insights are incredibly accurate and save hours of manual work."</p>
+              <p className="text-gray-300">"Uploadlink has drastically improved my workflow. I can upload and share directly."</p>
               <div className="mt-4 text-yellow-400">★★★★★</div>
             </div>
             <div className="p-6 rounded-xl bg-gray-800/30 backdrop-blur-sm border border-gray-700 hover:border-indigo-500/30 transition-all duration-300">
