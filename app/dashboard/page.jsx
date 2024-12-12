@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { db } from '@/firebase';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import Link from 'next/link';
 import {
   UserCircleIcon,
@@ -12,6 +12,7 @@ import {
   ArrowUpTrayIcon,
   ArrowRightOnRectangleIcon,
   CalendarIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
@@ -21,6 +22,8 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const maxFiles = 7;
+  const [showModal, setShowModal] = useState(false); // For showing the confirmation modal
+  const [pdfToDelete, setPdfToDelete] = useState(null);
 
   useEffect(() => {
     const fetchPDFs = async () => {
@@ -63,6 +66,24 @@ export default function Dashboard() {
       </div>
     );
   }
+  const handleDelete = async () => {
+    try {
+      if (pdfToDelete) {
+        await deleteDoc(doc(db, 'pdfs', pdfToDelete));
+        setPdfs((prevPdfs) => prevPdfs.filter((pdf) => pdf.id !== pdfToDelete)); // Update UI
+        setPdfToDelete(null); // Reset the state
+        setShowModal(false); // Close modal
+      }
+    } catch (error) {
+      console.error('Error deleting PDF:', error);
+    }
+  };
+
+  const handleDeleteClick = (pdfId) => {
+    setPdfToDelete(pdfId); // Set the PDF to be deleted
+    setShowModal(true); // Show the confirmation modal
+  };
+
   function truncateFileName(fileName, maxLength = 20) {
     if (fileName.length <= maxLength) return fileName;
   
@@ -161,6 +182,7 @@ export default function Dashboard() {
                     {pdf.createdAt.toLocaleDateString()}
                   </p>
                 </div>
+                <div className="flex items-center space-x-4">
                 <Link
                   href={pdf.fileUrl}
                   target="_blank"
@@ -168,11 +190,39 @@ export default function Dashboard() {
                 >
                   View
                 </Link>
+                <button
+                    onClick={() => handleDeleteClick(pdf.id)}
+                    className="text-red-400 hover:text-red-300"
+                  >
+                    <TrashIcon className="h-6 w-6" />
+                  </button></div>
               </div>
             ))}
           </div>
         </div>
       </div>
+      {/* Confirmation Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-200 mb-4">Are you sure you want to delete this PDF?</h3>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
