@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { sendPasswordResetEmail, deleteUser } from 'firebase/auth';
-import { auth } from '@/firebase';
+import { auth, db } from '@/firebase';
+
 import { useRouter } from 'next/navigation';
 import { 
   UserCircleIcon, 
@@ -18,6 +19,7 @@ import {
   HomeIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 
 export default function UserProfile() {
   const router = useRouter();
@@ -27,8 +29,38 @@ export default function UserProfile() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState({ type: '', message: '' });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [pdfs, setPdfs] = useState([]);
   const [deleteError, setDeleteError] = useState('');
+  const maxFiles = 7;
+  useEffect(() => {
+    const fetchPDFs = async () => {
+      if (!user) return;
 
+      try {
+        const q = query(
+          collection(db, 'pdfs'),
+          where('userId', '==', user.uid),
+          orderBy('createdAt', 'desc')
+        );
+
+        const querySnapshot = await getDocs(q);
+        const pdfData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: new Date(doc.data().createdAt),
+        }));
+
+        setPdfs(pdfData);
+      } catch (error) {
+        console.error('Error fetching PDFs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPDFs();
+  }, [user]);
   const stats = [
     { label: 'PDFs Processed', value: '45', icon: DocumentTextIcon },
     { label: 'Subscription', value: 'Pro Plan', icon: CreditCardIcon },
@@ -63,7 +95,14 @@ export default function UserProfile() {
       setDeleteError(error.message);
     }
   };
-
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+  const remainingUploads = maxFiles - pdfs.length;
   const PasswordResetModal = () => (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 border border-gray-700">
@@ -218,7 +257,7 @@ export default function UserProfile() {
                 <h3 className="text-lg font-semibold text-gray-200">{stat.label}</h3>
               </div>
               <p className="text-2xl font-bold mt-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                {stat.value}
+              {pdfs.length}
               </p>
             </div>
           ))}
