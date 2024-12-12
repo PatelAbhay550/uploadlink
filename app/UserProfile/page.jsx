@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { sendPasswordResetEmail, deleteUser } from 'firebase/auth';
-import { auth, db } from '@/firebase';
-
+import { auth, db, storage } from '@/firebase';
+import { ref, listAll, deleteObject } from 'firebase/storage';
+import { deleteDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { 
   UserCircleIcon, 
@@ -86,11 +87,26 @@ export default function UserProfile() {
     try {
       if (!user) return;
       
-      // Delete user from Firebase Auth
-      await deleteUser(user);
-      
-      // Redirect to home page after successful deletion
-      router.push('/');
+       // Step 1: Delete all user files from Firebase Storage
+    const userStorageRef = ref(storage, `users/${user.uid}`);
+    const listResult = await listAll(userStorageRef);
+
+    // Delete all files under the user's storage directory
+    const deleteFilePromises = listResult.items.map((fileRef) => deleteObject(fileRef));
+    await Promise.all(deleteFilePromises);
+
+    // Step 2: Delete all user data from Firestore
+    const userDocsQuery = query(collection(db, 'pdfs'), where('userId', '==', user.uid));
+    const querySnapshot = await getDocs(userDocsQuery);
+
+    const deleteDocsPromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deleteDocsPromises);
+
+    // Step 3: Delete user from Firebase Authentication
+    await deleteUser(user);
+
+    // Step 4: Redirect to the homepage
+    router.push('/');
     } catch (error) {
       setDeleteError(error.message);
     }
