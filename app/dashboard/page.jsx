@@ -73,29 +73,38 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Uploadlink
+              Document Storage
             </h1>
           </div>
           <div className="relative">
-            <button
-              onClick={() => setShowDropdown((prev) => !prev)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg transition-colors"
-            >
-              <UserCircleIcon className="h-6 w-6 text-gray-300" />
-              <span className="font-medium text-gray-300">{user?.displayName || 'User'}</span>
-            </button>
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-gray-800/50 rounded-lg shadow-lg">
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5 inline mr-2" />
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+  <button
+    onClick={() => setShowDropdown((prev) => !prev)}
+    className="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg transition-colors"
+  >
+    <UserCircleIcon className="h-6 w-6 text-gray-300" />
+    <span className="font-medium text-gray-300">{user?.email || 'User'}</span>
+  </button>
+  {showDropdown && (
+    <div className="absolute right-0 mt-2 w-48 bg-gray-800/50 rounded-lg shadow-lg">
+      <Link href="/UserProfile">
+        <button
+          className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+        >
+          <UserCircleIcon className="h-5 w-5 inline mr-2" />
+          Profile
+        </button>
+      </Link>
+      <button
+        onClick={handleLogout}
+        className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+      >
+        <ArrowRightOnRectangleIcon className="h-5 w-5 inline mr-2" />
+        Logout
+      </button>
+    </div>
+  )}
+</div>
+
         </div>
       </nav>
 
