@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
+import { auth } from '@/firebase';
 
 
 export default function Signup() {
@@ -13,9 +14,14 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  
   const { signup } = useAuth();
   const router = useRouter();
-
+ useEffect(() => {
+    if (auth) {
+      router.push('/dashboard');
+    }
+  }, [auth, router])
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -37,7 +43,7 @@ export default function Signup() {
       router.push('/dashboard');
     }
   };
-
+  if (auth) {router.push('/dashboard')}
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
