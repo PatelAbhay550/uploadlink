@@ -73,7 +73,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Document Storage
+              Uploadlink
             </h1>
           </div>
           <div className="relative">
