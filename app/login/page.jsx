@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { auth } from '@/firebase';
 import Link from 'next/link';
 
 
@@ -12,8 +13,13 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+ 
   const router = useRouter();
-
+  useEffect(() => {
+    if (auth) {
+      router.push('/dashboard');
+    }
+  }, [auth, router])
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await login(email, password);
@@ -23,7 +29,7 @@ export default function Login() {
       router.push('/dashboard');
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
