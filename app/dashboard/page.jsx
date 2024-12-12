@@ -133,7 +133,7 @@ export default function Dashboard() {
 
           {/* Upload Files Card */}
           <div
-            onClick={() => router.push('/PDFUpload')}
+            onClick={() => router.push('/upload')}
             className="cursor-pointer bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-indigo-500/50 transition-colors flex flex-col justify-center items-center"
           >
             <ArrowUpTrayIcon className="h-10 w-10 text-indigo-400" />
