@@ -12,6 +12,7 @@ export default function FileUpload() {
   const [uploading, setUploading] = useState(false);
   const [currentFile, setCurrentFile] = useState(null);
   const [remainingUploads, setRemainingUploads] = useState(0);
+  const [fileName, setFileName] = useState('');
   const { user } = useAuth();
   const router = useRouter();
   const maxFiles = 7;
@@ -45,28 +46,30 @@ export default function FileUpload() {
       return;
     }
 
+    // Use the custom file name if provided, otherwise use the original name
+    const uploadFileName = fileName.trim() || file.name;
     setUploading(true);
     setCurrentFile(file);
 
     try {
-      const storageRef = ref(storage, `files/${user.uid}/${Date.now()}-${file.name}`);
+      const storageRef = ref(storage, `files/${user.uid}/${Date.now()}-${uploadFileName}`);
       await uploadBytes(storageRef, file);
 
       const downloadURL = await getDownloadURL(storageRef);
 
       await addDoc(collection(db, 'pdfs'), {
         userId: user.uid,
-        fileName: file.name,
+        fileName: uploadFileName,
         fileUrl: downloadURL,
         createdAt: new Date().toISOString(),
       });
 
-      alert('File uploaded successfully! Redirecting to dashboard...');
+      // No alert on success, just show file upload success state
+      setUploading(false);
       router.push('/dashboard');
     } catch (error) {
       console.error('Error during upload:', error);
       alert(`Upload failed: ${error.message}`);
-    } finally {
       setUploading(false);
     }
   };
@@ -95,6 +98,17 @@ export default function FileUpload() {
           <h2 className="text-xl font-semibold mb-6">
             Remaining Uploads: {remainingUploads} / {maxFiles}
           </h2>
+          {/* File Name Input */}
+          <div className="mb-4">
+            <label className="block text-gray-300 font-medium mb-2">Set File Name (Optional)</label>
+            <input
+              type="text"
+              className="w-full p-2 bg-gray-700/50 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter custom file name (or leave blank to use original)"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+            />
+          </div>
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
@@ -104,6 +118,12 @@ export default function FileUpload() {
             <input {...getInputProps()} />
             {uploading ? <p>Uploading...</p> : <p>Drag & drop your file here, or click to select</p>}
           </div>
+          {/* File Upload Status */}
+          {uploading && (
+            <div className="mt-4 text-gray-400">
+              <p>Uploading {currentFile?.name}...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
