@@ -63,7 +63,17 @@ export default function Dashboard() {
       </div>
     );
   }
-
+  function truncateFileName(fileName, maxLength = 20) {
+    if (fileName.length <= maxLength) return fileName;
+  
+    const [name, extension] = fileName.split(/(?=\.[^.]+$)/); // Split name and extension
+    const visibleChars = Math.floor((maxLength - extension.length - 3) / 2);
+  
+    const start = name.slice(0, visibleChars); // First few characters
+    const end = name.slice(-visibleChars); // Last few characters
+  
+    return `${start}...${end}${extension}`;
+  }
   const remainingUploads = maxFiles - pdfs.length;
 
   return (
@@ -82,7 +92,7 @@ export default function Dashboard() {
     className="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg transition-colors"
   >
     <UserCircleIcon className="h-6 w-6 text-gray-300" />
-    <span className="font-medium text-gray-300">{'User'}</span>
+    <span className="font-medium text-gray-300">{user?.email || 'User'}</span>
   </button>
   {showDropdown && (
     <div className="absolute right-0 mt-2 w-48 bg-gray-800/50 rounded-lg shadow-lg">
@@ -145,7 +155,7 @@ export default function Dashboard() {
                 className="flex justify-between items-center p-4 rounded-lg bg-gray-700/50"
               >
                 <div>
-                  <p className="font-medium text-gray-200">{pdf.fileName}</p>
+                  <p className="font-medium text-gray-200">{truncateFileName(pdf.fileName, 25)}</p>
                   <p className="text-sm text-gray-400">
                     <CalendarIcon className="h-4 w-4 inline mr-1" />
                     {pdf.createdAt.toLocaleDateString()}
