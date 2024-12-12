@@ -92,7 +92,7 @@ export default function Dashboard() {
     className="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg transition-colors"
   >
     <UserCircleIcon className="h-6 w-6 text-gray-300" />
-    <span className="font-medium text-gray-300">{user?.email || 'User'}</span>
+    <span className="font-medium text-gray-300">{'User'}</span>
   </button>
   {showDropdown && (
     <div className="absolute right-0 mt-2 w-48 bg-gray-800/50 rounded-lg shadow-lg">
