@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.0.0",
     "@heroicons/react": "^2.2.0",
     "cohere-ai": "^7.15.0",
     "firebase": "^11.0.2",
