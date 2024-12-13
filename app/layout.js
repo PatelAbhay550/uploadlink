@@ -21,7 +21,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
     <head>
-    <meta name="google-site-verification" content="7-6j7haeyJWEhikD2wtLIv8Ei8tdX7VOIO3amkGNYdo" />
+    
+     <link rel="canonical" href="https://uploadlink.xyz/" />
     </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
