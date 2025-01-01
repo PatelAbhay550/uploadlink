@@ -23,12 +23,12 @@ export default function RootLayout({ children }) {
     <head>
     
      <link rel="canonical" href="https://uploadlink.xyz/" />
-    </head><Analytics>
+    </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-      </body></Analytics>
+        {children}<Analytics/>
+      </body>
     </html>
   );
 }
